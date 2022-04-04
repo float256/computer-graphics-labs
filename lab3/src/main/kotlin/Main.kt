@@ -1,5 +1,8 @@
+import window.GLFWInitializer
+import window.MainWindow
+
 fun main() {
     GLFWInitializer.init()
-    val window = MainWindow(1000, 1000, "Hello")
+    val window = MainWindow(500, 500, "Hello")
     window.run()
 }

@@ -1,4 +1,7 @@
+package window
+
 import org.lwjgl.glfw.GLFW.glfwInit
+
 
 object GLFWInitializer {
     fun init() {
