@@ -73,9 +73,7 @@ abstract class BaseWindow(
         glReadPixels(xInPixels, yInPixelsFromBottomLeft, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depthInBuffer)
         val depth = depthInBuffer.get()
 
-        println("$xInPixels, $yInPixels: $depth")
-
-        return depth == 1f
+        return (depth == 1f)
     }
 
     private fun fixAspectRatio(width: Int, height: Int) {
