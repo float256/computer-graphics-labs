@@ -1,5 +1,6 @@
 package window.mouse
 
+import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWCursorPosCallback
 import org.lwjgl.glfw.GLFWMouseButtonCallback
@@ -15,7 +16,16 @@ class DragAndDrop(
     init {
         val glfwMouseClickCallback = object : GLFWMouseButtonCallback() {
             override fun invoke(handle: Long, button: Int, action: Int, mods: Int) {
-                isLeftMouseDown = (handle == window.handle) && (button == GLFW_MOUSE_BUTTON_LEFT)
+                val mousePositionXInBuffer = BufferUtils.createDoubleBuffer(1)
+                val mousePositionYInBuffer = BufferUtils.createDoubleBuffer(1)
+                glfwGetCursorPos(window.handle, mousePositionXInBuffer, mousePositionYInBuffer)
+
+                val mouseX = mousePositionXInBuffer.get().toInt()
+                val mouseY = mousePositionYInBuffer.get().toInt()
+
+                previousPosition = positionToRelativeCoordinates(Point(mouseX.toDouble(), mouseY.toDouble()))
+                isLeftMouseDown = (handle == window.handle) && !window.isBackground(mouseX, mouseY)
+                        && (button == GLFW_MOUSE_BUTTON_LEFT)
                         && (action == GLFW_PRESS)
             }
         }
@@ -42,5 +52,11 @@ class DragAndDrop(
             }
         }
         glfwSetCursorPosCallback(window.handle, glfwCallback)
+    }
+
+    private fun positionToRelativeCoordinates(positionInAbsoluteCoordinates: Point): Point {
+        val xPosInRelativeCoordinates = 2 * positionInAbsoluteCoordinates.x / window.width - 1
+        val yPosInRelativeCoordinates = - 2 * positionInAbsoluteCoordinates.y / window.height + 1
+        return Point(xPosInRelativeCoordinates, yPosInRelativeCoordinates)
     }
 }

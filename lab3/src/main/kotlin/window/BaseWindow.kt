@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFWFramebufferSizeCallback
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil.NULL
+import org.lwjgl.opengl.GL11.GL_DEPTH_TEST
 
 
 abstract class BaseWindow(
@@ -40,8 +41,12 @@ abstract class BaseWindow(
 
     fun run() {
         glfwMakeContextCurrent(handle)
+        createCapabilities()
+        glEnable(GL_DEPTH_TEST)
+        glDepthMask(true)
+        glDepthFunc(GL_LEQUAL)
+        glDepthRange(0.0, 1.0)
         while (!glfwWindowShouldClose(handle)) {
-            createCapabilities()
             val widthInBuffer = BufferUtils.createIntBuffer(1)
             val heightInBuffer = BufferUtils.createIntBuffer(1)
             glfwGetFramebufferSize(handle, widthInBuffer, heightInBuffer)
@@ -49,7 +54,8 @@ abstract class BaseWindow(
             val frameBufferHeight = heightInBuffer.get()
 
             glClearColor(1f, 1f, 1f, 1f)
-            glClear(GL_COLOR_BUFFER_BIT)
+            glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+            glClearDepth(1.0)
 
             draw(frameBufferWidth, frameBufferHeight)
             fixAspectRatio(frameBufferWidth, frameBufferHeight)
@@ -58,6 +64,18 @@ abstract class BaseWindow(
             glfwSwapBuffers(handle)
             glfwPollEvents()
         }
+    }
+
+    fun isBackground(xInPixels: Int, yInPixels: Int): Boolean {
+        val yInPixelsFromBottomLeft = width - yInPixels
+
+        val depthInBuffer = BufferUtils.createFloatBuffer(1)
+        glReadPixels(xInPixels, yInPixelsFromBottomLeft, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depthInBuffer)
+        val depth = depthInBuffer.get()
+
+        println("$xInPixels, $yInPixels: $depth")
+
+        return depth == 1f
     }
 
     private fun fixAspectRatio(width: Int, height: Int) {
