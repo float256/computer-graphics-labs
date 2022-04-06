@@ -49,6 +49,8 @@ class DragAndDrop(
                     )
                     previousPosition = newPosition
                 }
+                val pos = positionToRelativeCoordinates(Point(xpos, ypos))
+                println("x: ${pos.x}, y: ${pos.y}")
             }
         }
         glfwSetCursorPosCallback(window.handle, glfwCallback)

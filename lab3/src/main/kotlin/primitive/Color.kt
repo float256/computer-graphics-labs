@@ -19,10 +19,13 @@ data class Color(
     }
 
     companion object {
-        val Red = Color(1.0, 0.0, 0.0)
-        val Green = Color(0.0, 1.0, 0.0)
-        val Blue = Color(0.0, 0.0, 1.0)
         val White = Color(1.0, 1.0, 1.0)
         val Black = Color(0.0, 0.0, 0.0)
+        val Yellow = Color(231 / 255.0, 192 / 255.0, 11 / 255.0)
+        val LightGray = Color(217 / 255.0, 216 / 255.0, 221 / 255.0)
+        val DarkGray = Color(101 / 255.0, 106 / 255.0, 118 / 255.0)
+        val DarkGreen = Color(28 / 255.0, 147 / 255.0, 27 / 255.0)
+        val LightGreen = Color(181 / 255.0, 207 / 255.0, 75 / 255.0)
+        val Red = Color(201 / 255.0, 14 / 255.0, 13 / 255.0)
     }
 }

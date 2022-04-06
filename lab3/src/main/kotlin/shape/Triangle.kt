@@ -11,7 +11,7 @@ class Triangle(
     override var center: Point,
     override val size: Size,
     override val border: Border? = null,
-    override val fillColor: Color = Color.Black,
+    override val fillColor: Color = Color.White,
     override val window: BaseWindow,
     private val direction: Direction = Direction.Top
 ) : Shape {

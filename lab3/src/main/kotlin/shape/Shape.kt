@@ -10,7 +10,7 @@ interface Shape {
     var center: Point
     val size: Size
     val border: Border?
-    val fillColor: Color?
+    val fillColor: Color
     val window: BaseWindow
 
     fun draw()
