@@ -18,8 +18,8 @@ class Triangle(
     fun draw() {
         glColor3d(color.red, color.green, color.blue)
         glBegin(GL_TRIANGLES)
-        specifyNormalVector()
         vertices.forEach { vertex -> glVertex3d(vertex.x, vertex.y, vertex.z) }
+        specifyNormalVector()
         glEnd()
     }
 

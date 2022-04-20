@@ -5,7 +5,7 @@ import primitive.Point3D
 
 class Octahedron {
     private val sides: List<Triangle> = listOf(
-        Triangle(RGB.DarkGray, setOf(
+        Triangle(RGB.LightGray, setOf(
             Point3D(-1.0, 0.0, 0.0),
             Point3D(0.0, 1.0, 0.0),
             Point3D(0.0, 0.0, 1.0),
@@ -15,32 +15,32 @@ class Octahedron {
             Point3D(0.0, 1.0, 0.0),
             Point3D(0.0, 0.0, -1.0),
         )),
-        Triangle(RGB.Yellow, setOf(
+        Triangle(RGB.LightGray, setOf(
             Point3D(-1.0, 0.0, 0.0),
             Point3D(0.0, -1.0, 0.0),
             Point3D(0.0, 0.0, 1.0),
         )),
-        Triangle(RGB.LightGreen, setOf(
+        Triangle(RGB.LightGray, setOf(
             Point3D(-1.0, 0.0, 0.0),
             Point3D(0.0, -1.0, 0.0),
             Point3D(0.0, 0.0, -1.0),
         )),
-        Triangle(RGB.DarkGreen, setOf(
+        Triangle(RGB.LightGray, setOf(
             Point3D(1.0, 0.0, 0.0),
             Point3D(0.0, 1.0, 0.0),
             Point3D(0.0, 0.0, 1.0),
         )),
-        Triangle(RGB.Red, setOf(
+        Triangle(RGB.LightGray, setOf(
             Point3D(1.0, 0.0, 0.0),
             Point3D(0.0, 1.0, 0.0),
             Point3D(0.0, 0.0, -1.0),
         )),
-        Triangle(RGB.Black, setOf(
+        Triangle(RGB.LightGray, setOf(
             Point3D(1.0, 0.0, 0.0),
             Point3D(0.0, -1.0, 0.0),
             Point3D(0.0, 0.0, 1.0),
         )),
-        Triangle(RGB.Yellow, setOf(
+        Triangle(RGB.LightGray, setOf(
             Point3D(1.0, 0.0, 0.0),
             Point3D(0.0, -1.0, 0.0),
             Point3D(0.0, 0.0, -1.0),

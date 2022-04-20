@@ -20,9 +20,6 @@ abstract class BaseWindow(
     var handle: Long = glfwCreateWindow(initialWidth, initialHeight, title, NULL, NULL)
         private set
 
-    private val mouseMoveEvent = MouseMove(this)
-    private val camera = Camera(this)
-
     init {
         if (handle == NULL) {
             throw RuntimeException("Failed to create window")
@@ -37,13 +34,11 @@ abstract class BaseWindow(
             }
         }
         glfwSetFramebufferSizeCallback(handle, frameBufferSizeCallback)
-
-        mouseMoveEvent.doOnMouseMove { offset ->
-            camera.addAngle(offset.x, offset.y)
-        }
     }
 
     protected abstract fun onDraw(frameBufferWidth: Int, frameBufferHeight: Int)
+    protected abstract fun setupCamera()
+    protected abstract fun onInit()
 
     private fun fixAspectRatio(width: Int, height: Int) {
         glMatrixMode(GL_PROJECTION)
@@ -60,7 +55,7 @@ abstract class BaseWindow(
     fun run() {
         glfwMakeContextCurrent(handle)
         createCapabilities()
-        glEnable(GL_DEPTH_TEST)
+        onInit()
         while (!glfwWindowShouldClose(handle)) {
             val widthInBuffer = BufferUtils.createIntBuffer(1)
             val heightInBuffer = BufferUtils.createIntBuffer(1)
@@ -71,7 +66,7 @@ abstract class BaseWindow(
             glClearColor(1f, 1f, 1f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-            camera.rotate()
+            setupCamera()
 
             onDraw(frameBufferWidth, frameBufferHeight)
             fixAspectRatio(frameBufferWidth, frameBufferHeight)
