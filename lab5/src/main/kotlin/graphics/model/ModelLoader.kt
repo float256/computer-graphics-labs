@@ -57,13 +57,13 @@ class ModelLoader {
     private fun parseElement(str: String, vertices: MutableList<Vector3d>): FaceElement {
         val verticesArrayPositions = str.split("/").map(String::toIntOrNull)
 
-        if (verticesArrayPositions.size > 4) {
+        if (verticesArrayPositions.size > 3) {
             throw IllegalArgumentException("Incorrect line format")
         }
 
         val geometricVertexPosition = verticesArrayPositions[0]!!
-        val textureVertexPosition = verticesArrayPositions[1]
-        val normalVertexPosition = verticesArrayPositions[2]
+        val textureVertexPosition = verticesArrayPositions.getOrNull(1)
+        val normalVertexPosition = verticesArrayPositions.getOrNull(2)
 
         val geometricVertex = vertices[geometricVertexPosition - 1]
         val textureVertex = if (textureVertexPosition != null) {

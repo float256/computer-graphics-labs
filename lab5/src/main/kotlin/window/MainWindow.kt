@@ -21,13 +21,13 @@ class MainWindow(
     title: String
 ) : BaseWindow(width, height, title) {
     private val mouseMoveEvent = MouseMoveEventHandler(this)
-    private val camera = Camera(0.125)
+    private val camera = Camera(0.25)
     private val modelLoader = ModelLoader()
     private val modelDrawer = ModelDrawer()
     private val model: Model
 
     init {
-        Resources.getResource("bunny.obj").openStream().use { modelFileStream ->
+        Resources.getResource("cube.obj").openStream().use { modelFileStream ->
             model = modelLoader.load(modelFileStream!!)
         }
         subscribeOnCameraEvents()
@@ -36,7 +36,6 @@ class MainWindow(
     override fun onDraw(frameBufferSize: Size<Int>) {
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
-//        setModelViewMatrix(camera.calculateModelViewMatrix(0.25))
         modelDrawer.draw(model)
     }
 
