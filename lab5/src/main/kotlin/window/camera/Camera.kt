@@ -9,7 +9,7 @@ class Camera(
 ) {
     private val cameraMatrix: Matrix4d = Matrix4d()
         .lookAt(
-            Vector3d(0.0, 0.0, 10.0),
+            Vector3d(0.0, 0.0, 1.0),
             Vector3d(0.0, 0.0, 0.0),
             Vector3d(0.0, 1.0, 0.0),
         )

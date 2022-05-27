@@ -51,13 +51,13 @@ class MainWindow(
             specularIntensity = RGBA(0.03, 0.03, 0.03, 1.0)
         )
 
-        light.specifyLightParameters(GL_LIGHT0)
-
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
         glEnable(GL_DEPTH_TEST)
+        glEnable(GL_CULL_FACE or GL_CULL_FACE_MODE)
         glColorMaterial(GL_FRONT, GL_DIFFUSE)
         glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
+        light.specifyLightParameters(GL_LIGHT0)
     }
 
     private fun subscribeOnCameraEvents() {
