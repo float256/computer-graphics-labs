@@ -7,11 +7,11 @@ import graphics.model.ModelDrawer
 import graphics.model.ModelLoader
 import org.joml.Matrix4dc
 import org.joml.Vector3d
-import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryStack.stackPush
 import primitive.RGBA
 import primitive.Size
+import resourse.ResourceStreamLoader
 import window.camera.Camera
 import kotlin.math.PI
 
@@ -22,12 +22,12 @@ class MainWindow(
 ) : BaseWindow(width, height, title) {
     private val mouseMoveEvent = MouseMoveEventHandler(this)
     private val camera = Camera(0.25)
-    private val modelLoader = ModelLoader()
+    private val modelLoader = ModelLoader(ResourceStreamLoader())
     private val modelDrawer = ModelDrawer()
     private val model: Model
 
     init {
-        Resources.getResource("cube.obj").openStream().use { modelFileStream ->
+        Resources.getResource("untitled.obj").openStream().use { modelFileStream ->
             model = modelLoader.load(modelFileStream!!)
         }
         subscribeOnCameraEvents()
@@ -56,7 +56,7 @@ class MainWindow(
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_CULL_FACE or GL_CULL_FACE_MODE)
         glColorMaterial(GL_FRONT, GL_DIFFUSE)
-        glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
+        //glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
         light.specifyLightParameters(GL_LIGHT0)
     }
 

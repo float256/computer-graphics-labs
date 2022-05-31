@@ -1,15 +1,21 @@
 package graphics.model
 
 import org.joml.Vector3d
+import resourse.InputStreamLoader
 import java.io.InputStream
 import java.util.Scanner
 
-class ModelLoader {
+class ModelLoader(
+    private val inputStreamLoader: InputStreamLoader
+) {
+    private val materialLoader = MaterialLoader()
+
     private enum class LineType(val linePrefix: String) {
         GeometricVertex("v"),
         TexturedVertex("vt"),
         NormalVertex("vn"),
-        Face("f")
+        Face("f"),
+        Material("mtllib")
     }
 
     fun load(stream: InputStream): Model {
@@ -17,21 +23,27 @@ class ModelLoader {
 
         val vertices = mutableListOf<Vector3d>()
         val faces = mutableListOf<Face>()
+        val materials = mutableMapOf<String, Material>()
         while (scanner.hasNext()) {
-            val line = scanner.nextLine()
-            parseLine(line, vertices, faces)
+            val lineParts = scanner.nextLine().split(" ")
+            when (lineParts.firstOrNull()) {
+                LineType.GeometricVertex.linePrefix -> parseVertex(lineParts, vertices)
+                LineType.TexturedVertex.linePrefix -> parseVertex(lineParts, vertices)
+                LineType.NormalVertex.linePrefix -> parseVertex(lineParts, vertices)
+                LineType.Face.linePrefix -> parseFace(lineParts, vertices, faces)
+                LineType.Material.linePrefix -> materials.putAll(parseMaterials(lineParts))
+            }
         }
-        return Model(faces)
+        return Model(faces, materials)
     }
 
-    private fun parseLine(line: String, vertices: MutableList<Vector3d>, faces: MutableList<Face>) {
-        val lineParts = line.split(" ")
-        when (lineParts.firstOrNull()) {
-            LineType.GeometricVertex.linePrefix -> parseVertex(lineParts, vertices)
-            LineType.TexturedVertex.linePrefix -> parseVertex(lineParts, vertices)
-            LineType.NormalVertex.linePrefix -> parseVertex(lineParts, vertices)
-            LineType.Face.linePrefix -> parseFace(lineParts, vertices, faces)
+    private fun parseMaterials(lineParts: List<String>): Map<String, Material> {
+        if (lineParts.size > 2) {
+            throw IllegalArgumentException("Incorrect line format")
         }
+
+        val materialsInputStream = inputStreamLoader.load(lineParts[1])
+        return materialLoader.loadMaterials(materialsInputStream)
     }
 
     private fun parseVertex(lineParts: List<String>, vertices: MutableList<Vector3d>) {

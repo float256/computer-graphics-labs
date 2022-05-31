@@ -25,9 +25,13 @@ class ModelDrawer {
 
     private fun drawVertex(vertex: FaceElement) {
         val normalVertex = vertex.normalVertex
+        val textureVertex = vertex.textureVertex
         val geometricVertex = vertex.geometricVertex
         if (normalVertex != null) {
             glNormal3d(normalVertex.x, normalVertex.y, normalVertex.z)
+        }
+        if (textureVertex != null) {
+            glTexCoord2d(textureVertex.x, textureVertex.y)
         }
         glVertex3d(geometricVertex.x, geometricVertex.y, geometricVertex.z)
     }
