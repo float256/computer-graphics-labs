@@ -61,6 +61,7 @@ class MainWindow(
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_CULL_FACE or GL_CULL_FACE_MODE)
         glColorMaterial(GL_FRONT, GL_DIFFUSE)
+        glEnable(GL_TEXTURE_2D)
         //glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
         light.specifyLightParameters(GL_LIGHT0)
         textures = model.materials

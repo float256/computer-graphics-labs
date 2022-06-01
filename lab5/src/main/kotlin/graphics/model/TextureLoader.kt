@@ -2,6 +2,7 @@ package graphics.model
 
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL14.GL_MIRRORED_REPEAT
 import org.lwjgl.stb.STBImage.stbi_image_free
 import org.lwjgl.stb.STBImage.stbi_load
 import java.nio.ByteBuffer
@@ -12,9 +13,9 @@ class TextureLoader {
         val texID = glGenTextures()
         glBindTexture(GL_TEXTURE_2D, texID)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
         val width: IntBuffer = BufferUtils.createIntBuffer(1)
         val height: IntBuffer = BufferUtils.createIntBuffer(1)

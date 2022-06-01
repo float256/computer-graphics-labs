@@ -22,17 +22,20 @@ class ModelLoader(
     fun load(stream: InputStream): Model {
         val scanner = Scanner(stream)
 
-        val vertices = mutableListOf<Vector3d>()
+        val geometricVertices = mutableListOf<Vector3d>()
+        val textureVertices = mutableListOf<Vector3d>()
+        val normalVertices = mutableListOf<Vector3d>()
+
         val faces = mutableListOf<Face>()
         val materials = mutableMapOf<String, Material>()
         var currMaterialName = ""
         while (scanner.hasNext()) {
             val lineParts = scanner.nextLine().split(" ")
             when (lineParts.firstOrNull()) {
-                LineType.GeometricVertex.linePrefix -> parseVertex(lineParts, vertices)
-                LineType.TexturedVertex.linePrefix -> parseVertex(lineParts, vertices)
-                LineType.NormalVertex.linePrefix -> parseVertex(lineParts, vertices)
-                LineType.Face.linePrefix -> parseFace(lineParts, vertices, faces, currMaterialName)
+                LineType.GeometricVertex.linePrefix -> parseVertex(lineParts, geometricVertices)
+                LineType.TexturedVertex.linePrefix -> parseVertex(lineParts, textureVertices)
+                LineType.NormalVertex.linePrefix -> parseVertex(lineParts, normalVertices)
+                LineType.Face.linePrefix -> parseFace(lineParts, geometricVertices, textureVertices, normalVertices, faces, currMaterialName)
                 LineType.Material.linePrefix -> materials.putAll(parseMaterials(lineParts))
                 LineType.ChangeMaterial.linePrefix -> currMaterialName = parseMaterialName(lineParts)
             }
@@ -71,13 +74,25 @@ class ModelLoader(
         )
     }
 
-    private fun parseFace(lineParts: List<String>, vertices: MutableList<Vector3d>, faces: MutableList<Face>, materialName: String) {
+    private fun parseFace(
+        lineParts: List<String>,
+        geometricVertices: MutableList<Vector3d>,
+        textureVertices: MutableList<Vector3d>,
+        normalVertices: MutableList<Vector3d>,
+        faces: MutableList<Face>,
+        materialName: String
+    ) {
         val linePartsWithoutPrefix = lineParts.subList(1, lineParts.size)
-        val faceElements = linePartsWithoutPrefix.map { parseElement(it, vertices) }
+        val faceElements = linePartsWithoutPrefix.map { parseElement(it, geometricVertices, textureVertices, normalVertices) }
         faces.add(Face(faceElements, materialName))
     }
 
-    private fun parseElement(str: String, vertices: MutableList<Vector3d>): FaceElement {
+    private fun parseElement(
+        str: String,
+        geometricVertices: MutableList<Vector3d>,
+        textureVertices: MutableList<Vector3d>,
+        normalVertices: MutableList<Vector3d>,
+    ): FaceElement {
         val verticesArrayPositions = str.split("/").map(String::toIntOrNull)
 
         if (verticesArrayPositions.size > 3) {
@@ -88,14 +103,14 @@ class ModelLoader(
         val textureVertexPosition = verticesArrayPositions.getOrNull(1)
         val normalVertexPosition = verticesArrayPositions.getOrNull(2)
 
-        val geometricVertex = vertices[geometricVertexPosition - 1]
+        val geometricVertex = geometricVertices[geometricVertexPosition - 1]
         val textureVertex = if (textureVertexPosition != null) {
-            vertices[textureVertexPosition - 1]
+            textureVertices[textureVertexPosition - 1]
         } else {
             null
         }
         val normalVertex = if (normalVertexPosition != null) {
-            vertices[normalVertexPosition - 1]
+            normalVertices[normalVertexPosition - 1]
         } else {
             null
         }
