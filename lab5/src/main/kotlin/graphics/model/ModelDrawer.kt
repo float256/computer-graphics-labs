@@ -3,10 +3,18 @@ package graphics.model
 import org.lwjgl.opengl.GL11.*
 
 class ModelDrawer {
-    fun draw(model: Model) {
+    fun draw(model: Model, textures: Map<String, Int>) {
+        var prevMaterialName: String? = null
+
         model.faceList.forEach { face ->
-            glColor3f(0.4f, 0.27f, 0.17f)
             drawFace(face)
+
+            val currMaterialName = face.material
+            if (prevMaterialName != currMaterialName && prevMaterialName != null) {
+                val textureId = textures[face.material]!!
+                glBindTexture(GL_TEXTURE_2D, textureId)
+            }
+            prevMaterialName = currMaterialName
         }
     }
 

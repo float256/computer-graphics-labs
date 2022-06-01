@@ -5,6 +5,7 @@ import graphics.light.DirectLight
 import graphics.model.Model
 import graphics.model.ModelDrawer
 import graphics.model.ModelLoader
+import graphics.model.TextureLoader
 import org.joml.Matrix4dc
 import org.joml.Vector3d
 import org.lwjgl.opengl.GL11.*
@@ -22,9 +23,12 @@ class MainWindow(
 ) : BaseWindow(width, height, title) {
     private val mouseMoveEvent = MouseMoveEventHandler(this)
     private val camera = Camera(0.25)
-    private val modelLoader = ModelLoader(ResourceStreamLoader())
+    private val inputStreamLoader = ResourceStreamLoader()
+    private val modelLoader = ModelLoader(inputStreamLoader)
+    private val textureLoader = TextureLoader()
     private val modelDrawer = ModelDrawer()
     private val model: Model
+    private var textures: Map<String, Int>? = null
 
     init {
         Resources.getResource("untitled.obj").openStream().use { modelFileStream ->
@@ -35,8 +39,9 @@ class MainWindow(
 
     override fun onDraw(frameBufferSize: Size<Int>) {
         glEnable(GL_COLOR_MATERIAL)
+        glEnable(GL_TEXTURE_2D)
         glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
-        modelDrawer.draw(model)
+        modelDrawer.draw(model, textures!!)
     }
 
     override fun setupCamera() {
@@ -45,7 +50,7 @@ class MainWindow(
 
     override fun onInit() {
         val light = DirectLight(
-            direction = Vector3d(1.0, 1.0, 3.0),
+            direction = Vector3d(1.0, 1.0, 5.0),
             diffuseIntensity = RGBA(0.05, 0.05, 0.05, 1.0),
             ambientIntensity = RGBA(0.05, 0.05, 0.05, 1.0),
             specularIntensity = RGBA(0.03, 0.03, 0.03, 1.0)
@@ -58,6 +63,9 @@ class MainWindow(
         glColorMaterial(GL_FRONT, GL_DIFFUSE)
         //glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
         light.specifyLightParameters(GL_LIGHT0)
+        textures = model.materials
+            .map { (key, value) -> Pair(key, textureLoader.load("src/main/resources/" + value.ambientTexturePath!!)) }
+            .toMap()
     }
 
     private fun subscribeOnCameraEvents() {

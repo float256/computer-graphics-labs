@@ -15,7 +15,8 @@ class ModelLoader(
         TexturedVertex("vt"),
         NormalVertex("vn"),
         Face("f"),
-        Material("mtllib")
+        Material("mtllib"),
+        ChangeMaterial("usemtl")
     }
 
     fun load(stream: InputStream): Model {
@@ -24,17 +25,27 @@ class ModelLoader(
         val vertices = mutableListOf<Vector3d>()
         val faces = mutableListOf<Face>()
         val materials = mutableMapOf<String, Material>()
+        var currMaterialName = ""
         while (scanner.hasNext()) {
             val lineParts = scanner.nextLine().split(" ")
             when (lineParts.firstOrNull()) {
                 LineType.GeometricVertex.linePrefix -> parseVertex(lineParts, vertices)
                 LineType.TexturedVertex.linePrefix -> parseVertex(lineParts, vertices)
                 LineType.NormalVertex.linePrefix -> parseVertex(lineParts, vertices)
-                LineType.Face.linePrefix -> parseFace(lineParts, vertices, faces)
+                LineType.Face.linePrefix -> parseFace(lineParts, vertices, faces, currMaterialName)
                 LineType.Material.linePrefix -> materials.putAll(parseMaterials(lineParts))
+                LineType.ChangeMaterial.linePrefix -> currMaterialName = parseMaterialName(lineParts)
             }
         }
         return Model(faces, materials)
+    }
+
+    private fun parseMaterialName(lineParts: List<String>): String {
+        if (lineParts.size > 2) {
+            throw IllegalArgumentException("Incorrect line format")
+        }
+
+        return lineParts[1]
     }
 
     private fun parseMaterials(lineParts: List<String>): Map<String, Material> {
@@ -60,10 +71,10 @@ class ModelLoader(
         )
     }
 
-    private fun parseFace(lineParts: List<String>, vertices: MutableList<Vector3d>, faces: MutableList<Face>) {
+    private fun parseFace(lineParts: List<String>, vertices: MutableList<Vector3d>, faces: MutableList<Face>, materialName: String) {
         val linePartsWithoutPrefix = lineParts.subList(1, lineParts.size)
         val faceElements = linePartsWithoutPrefix.map { parseElement(it, vertices) }
-        faces.add(Face(faceElements))
+        faces.add(Face(faceElements, materialName))
     }
 
     private fun parseElement(str: String, vertices: MutableList<Vector3d>): FaceElement {
