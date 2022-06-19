@@ -1,4 +1,4 @@
-package primitives
+package common
 
 import kotlin.math.sqrt
 
@@ -16,5 +16,7 @@ class Vector(
     fun cross(v: Vector) = Vector(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x)
     fun dot(v: Vector) = x * v.x + y * v.y + z * v.z
     fun normalize(): Vector = this * (1 / length())
-    fun length(): Double = sqrt(x * x + y * y + z * z)
+    private fun length(): Double = sqrt(x * x + y * y + z * z)
+
+    override fun toString(): String = "($x, $y, $z)"
 }

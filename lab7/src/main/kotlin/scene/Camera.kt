@@ -1,6 +1,6 @@
 package scene
 
-import primitives.Vector
+import common.Vector
 
 interface Camera {
     fun transform(x: Int, y: Int): Vector

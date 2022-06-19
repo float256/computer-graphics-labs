@@ -1,7 +1,7 @@
 package `object`
 
-import primitives.Ray
-import primitives.Vector
+import common.Ray
+import common.Vector
 
 interface Obj{
     val color: Vector

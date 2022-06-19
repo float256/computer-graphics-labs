@@ -3,8 +3,8 @@ import `object`.DiffuseMaterial
 import `object`.Plane
 import `object`.SpecularMaterial
 import `object`.Sphere
-import primitives.Ray
-import primitives.Vector
+import common.Ray
+import common.Vector
 import scene.PerspectiveCamera
 import scene.Scene
 import kotlin.math.PI
@@ -14,7 +14,7 @@ const val StopProbability = 0.1
 const val Width = 500
 const val Height = 500
 const val FOV = PI / 4
-const val NumberOfSamples = 1
+const val NumberOfSamples = 200
 
 fun isNeedToStop(): Boolean {
     return Random.nextDouble(0.0, 1.0) < StopProbability
@@ -45,18 +45,10 @@ fun trace(prevRay: Ray, scene: Scene, color: Vector, depth: Int = 0): Pair<Ray, 
 fun generateScene(): Scene {
     return Scene(
         listOf(
-            Sphere(
-                Vector(0.0,1.9,-3.0),
-                0.5,
-                Vector(0.0,0.0,0.0),
-                10000.0,
-                DiffuseMaterial()
-            ),
-
             Plane(
                 2.5,
                 Vector(0.0, 1.0, 0.0),
-                Vector(6.0, 6.0, 6.0),
+                Vector(2.0, 2.0, 2.0),
                 0.0,
                 DiffuseMaterial()
             ),
@@ -70,7 +62,7 @@ fun generateScene(): Scene {
             Plane(
                 2.75,
                 Vector(1.0, 0.0, 0.0),
-                Vector(10.0, 2.0, 2.0),
+                Vector(10.0, 10.0, 2.0),
                 0.0,
                 DiffuseMaterial()
             ),
@@ -84,7 +76,7 @@ fun generateScene(): Scene {
             Plane(
                 3.0,
                 Vector(0.0, -1.0, 0.0),
-                Vector(6.0, 6.0, 6.0),
+                Vector(10.0, 2.0, 2.0),
                 0.0,
                 DiffuseMaterial()
             ),
@@ -93,6 +85,28 @@ fun generateScene(): Scene {
                 Vector(0.0, 0.0, -1.0),
                 Vector(6.0, 6.0, 6.0),
                 0.0,
+                DiffuseMaterial()
+            ),
+
+            Sphere(
+                Vector(-1.75,-1.95,-3.1),
+                0.75,
+                Vector(8.0, 4.0, 8.0),
+                0.0,
+                SpecularMaterial()
+            ),
+            Sphere(
+                Vector(2.0,-2.0,-3.7),
+                1.5,
+                Vector(4.0, 4.0, 8.0),
+                0.0,
+                DiffuseMaterial()
+            ),
+            Sphere(
+                Vector(0.0,1.9,-3.0),
+                0.5,
+                Vector(),
+                10000.0,
                 DiffuseMaterial()
             ),
         )
@@ -107,20 +121,16 @@ fun main() {
         Array(Width) { Vector() }
     }
 
-    var tmp = 0
     for (colIndex in (0 until Height)) {
         for (rowIndex in (0 until Width)) {
             repeat(NumberOfSamples) {
                 val origin = Vector()
-                val direction = (camera.transform(colIndex, rowIndex) + getRandomRayShift() - origin).normalize()
+                val direction = (camera.transform(rowIndex, colIndex) + getRandomRayShift()).normalize()
                 val ray = Ray(origin, direction)
-
                 val (_, newColor) = trace(ray, scene, Vector())
-                pixels[colIndex][rowIndex] += newColor / NumberOfSamples.toDouble();
-                tmp++
+                pixels[colIndex][rowIndex] = pixels[colIndex][rowIndex] + newColor / NumberOfSamples.toDouble()
             }
         }
-        println(tmp)
     }
 
     imageSaver.save(pixels, "image.ppm")

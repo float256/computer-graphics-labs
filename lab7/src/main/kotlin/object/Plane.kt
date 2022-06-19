@@ -1,8 +1,7 @@
 package `object`
 
-import primitives.Constants
-import primitives.Ray
-import primitives.Vector
+import common.Ray
+import common.Vector
 
 class Plane(
     private val distance: Double,
@@ -14,10 +13,14 @@ class Plane(
     override fun computeDistance(ray: Ray): Double {
         val dotProduct = normal.dot(ray.direction)
         return if (dotProduct != 0.0) {
-            val t = -1 * (((normal.dot(ray.origin)) + distance) / dotProduct)
-            return if (t > Constants.Epsilon) t else 0.0
+            val result = -1 * ((normal.dot(ray.origin) + distance) / dotProduct)
+            if (result > 0) {
+                result
+            } else {
+                Double.MAX_VALUE
+            }
         } else {
-            0.0
+            Double.MAX_VALUE
         }
     }
 

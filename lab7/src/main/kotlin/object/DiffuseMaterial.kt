@@ -1,6 +1,6 @@
 package `object`
 
-import primitives.*
+import common.*
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -10,8 +10,8 @@ class DiffuseMaterial : Material {
     }
 
     override fun computeReflection(ray: Ray, intersection: Intersection): Ray {
-        val hitPoint = ray.origin + ray.direction * intersection.distance;
-        val normal = intersection.obj.normal(hitPoint);
+        val hitPoint = ray.origin + ray.direction * intersection.distance
+        val normal = intersection.obj.normal(hitPoint)
 
         val (rotX, rotY) = generateOrthogonalSystem(normal)
         val sampleDirection = uniformSampleHemisphere(
@@ -32,11 +32,11 @@ class DiffuseMaterial : Material {
 
     private fun generateOrthogonalSystem(v1: Vector): Pair<Vector, Vector> {
         val v2 = if (abs(v1.x) > abs(v1.y)) {
-            val invLen = 1 / sqrt(v1.x * v1.x + v1.z * v1.z);
-            Vector(-v1.z * invLen, 0.0, v1.x * invLen);
+            val invLen = 1 / sqrt(v1.x * v1.x + v1.z * v1.z)
+            Vector(-v1.z * invLen, 0.0, v1.x * invLen)
         } else {
-            val invLen = 1 / sqrt(v1.y * v1.y + v1.z * v1.z);
-            Vector(0.0, v1.z * invLen, -v1.y * invLen);
+            val invLen = 1 / sqrt(v1.y * v1.y + v1.z * v1.z)
+            Vector(0.0, v1.z * invLen, -v1.y * invLen)
         }
         val v3 = v1.cross(v2)
         return Pair(v2, v3)
@@ -45,7 +45,6 @@ class DiffuseMaterial : Material {
     private fun uniformSampleHemisphere(u1: Double, u2: Double): Vector {
         val r = sqrt(1.0 - u1 * u1)
         val phi = 2 * PI * u2
-
         return Vector(cos(phi) * r, sin(phi) * r, u1)
     }
 }

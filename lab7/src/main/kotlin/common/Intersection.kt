@@ -1,4 +1,4 @@
-package primitives
+package common
 
 import `object`.Obj
 

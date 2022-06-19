@@ -1,6 +1,6 @@
 package file
 
-import primitives.Vector
+import common.Vector
 import java.io.File
 import kotlin.math.min
 

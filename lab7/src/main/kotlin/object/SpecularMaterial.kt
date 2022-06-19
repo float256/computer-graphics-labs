@@ -1,8 +1,8 @@
 package `object`
 
-import primitives.Intersection
-import primitives.Ray
-import primitives.Vector
+import common.Intersection
+import common.Ray
+import common.Vector
 
 class SpecularMaterial: Material {
     override fun computeReflection(ray: Ray, intersection: Intersection): Ray {
@@ -13,7 +13,7 @@ class SpecularMaterial: Material {
         return Ray(hitPoint, rayDirection)
     }
 
-    override fun computeColor(color: Vector, intersection: Intersection): Vector {
-        return color
+    override fun computeColor(nextColor: Vector, intersection: Intersection): Vector {
+        return nextColor
     }
 }

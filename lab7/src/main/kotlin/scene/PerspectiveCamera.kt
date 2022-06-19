@@ -1,6 +1,6 @@
 package scene
 
-import primitives.Vector
+import common.Vector
 import kotlin.math.PI
 import kotlin.math.tan
 
@@ -28,7 +28,7 @@ class PerspectiveCamera(
 
     override fun transform(x: Int, y: Int): Vector {
         val fovX = fov
-        val fovY = fov * height.toDouble() / width.toDouble()
+        val fovY = (height.toDouble() / width.toDouble()) * fov
         return Vector(
             ((2.0 * x - width) / width) * tan(fovX),
             -((2.0 * y - height) / height) * tan(fovY),
