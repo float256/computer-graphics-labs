@@ -14,7 +14,7 @@ const val StopProbability = 0.1
 const val Width = 500
 const val Height = 500
 const val FOV = PI / 4
-const val NumberOfSamples = 200
+const val NumberOfSamples = 50
 
 fun isNeedToStop(): Boolean {
     return Random.nextDouble(0.0, 1.0) < StopProbability
